@@ -1,0 +1,49 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout"
+         xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+<l:ajax>
+<div>
+  Specifies reservations via (1) number of the executors to be reserved,
+  (2) the cron syntax to specify the start time of reservations, and
+  (3) duration of the reservation
+
+  <p>
+    Specifically, each line consists of 7 fields separated by TAB or whitespace:
+  </p>
+  <pre>SIZE : MINUTE HOUR DOM MONTH DOW : DURATION</pre>
+  <table>
+    <tr>
+      <td>SIZE</td>
+      <td>Number of executors to be reserved.</td>
+    </tr>
+    <tr>
+      <td>MINUTE HOUR DOM MONTH DOW</td>
+      <td>
+          See this for <a href="${rootURL}/descriptor/hudson.triggers.TimerTrigger/help/spec" target="_new">the details of the cron syntax</a>
+          This specifies the starting point of the reservation.
+      </td>
+    </tr>
+    <tr>
+      <td>DURATION</td>
+      <td>The length of the reservation in terms of minutes.</td>
+    </tr>
+  </table>
+  <p>
+    Size can be negative, which is useful for cancelling out other reservations. For example,
+    you might have "2 : 0 8 * * * : 480" to indicate 8hr reservation from 8am for 2 executors,
+    then you can have "-1 : 0 12 * * * : 60" to indicate that from noon to 1pm, the reservation goes down to 1 executor from 2.
+  </p>
+  <table>
+    <tr>
+      <td>Examples</td>
+      <td>
+<pre>
+# during weekday 8am-5pm, free up 2 executors for interactive use
+# 5pm-8am = 9hr = 540mins
+2 : 0 8 * * 1-5 : 540
+</pre>
+      </td>
+    </tr>
+  </table>
+</div>
+</l:ajax>
+</j:jelly>
