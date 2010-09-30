@@ -68,7 +68,7 @@ public class LoadPredictorImplTest extends HudsonTestCase {
 
         // remove the property and we should be building
         hudson.getNodeProperties().clear();
-        hudson.getQueue().scheduleMaintenance();
+        hudson.getQueue().scheduleMaintenance(); // emulates the effect of saving configuration
         assertBuildStatusSuccess(task);
     }
 }
