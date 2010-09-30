@@ -38,6 +38,8 @@ import java.util.List;
 import static hudson.Util.*;
 
 /**
+ * Records {@link SlaveSquatter}s for the node.
+ *
  * @author Kohsuke Kawaguchi
  */
 public class NodePropertyImpl extends NodeProperty<Node> {
