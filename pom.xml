@@ -9,7 +9,7 @@
   </parent>
   
   <artifactId>slave-squatter</artifactId>
-  <version>1.1</version>
+  <version>1.2-SNAPSHOT</version>
   <packaging>hpi</packaging>
   <name>Hudson slave squatter plugin</name>
   <url>http://wiki.hudson-ci.org/display/HUDSON/Slave+Squatter+Plugin</url>
@@ -54,12 +54,6 @@
       <scope>test</scope>
     </dependency>
   </dependencies-->
-
-  <scm>
-    <connection>scm:svn:https://guest@svn.dev.java.net/svn/hudson/tags/slave-squatter-1.1</connection>
-    <developerConnection>scm:svn:https://svn.dev.java.net/svn/hudson/tags/slave-squatter-1.1</developerConnection>
-    <url>https://hudson.dev.java.net/source/browse/hudson/tags/slave-squatter-1.1</url>
-  </scm>
 </project>
 
 
