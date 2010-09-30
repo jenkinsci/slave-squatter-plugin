@@ -65,5 +65,10 @@ public class LoadPredictorImplTest extends HudsonTestCase {
         Future<FreeStyleBuild> task = p.scheduleBuild2(0);
         Thread.sleep(3000);
         assertFalse("build should be blocked", task.isDone());
+
+        // remove the property and we should be building
+        hudson.getNodeProperties().clear();
+        hudson.getQueue().scheduleMaintenance();
+        assertBuildStatusSuccess(task);
     }
 }
