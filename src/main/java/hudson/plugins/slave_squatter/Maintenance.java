@@ -83,7 +83,7 @@ public class Maintenance extends PeriodicWork {
             NodePropertyImpl p = n.getNodeProperties().get(NodePropertyImpl.class);
             if (p == null) continue;
 
-            int r = p.sizeOfReservation(now);
+            int r = p.sizeOfReservation(c,now);
             int current=0;
             int idle=0;
             for (Executor e : c.getExecutors()) {

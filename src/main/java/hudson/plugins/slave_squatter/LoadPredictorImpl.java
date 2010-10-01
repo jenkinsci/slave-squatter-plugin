@@ -51,8 +51,8 @@ public class LoadPredictorImpl extends LoadPredictor {
         int cnt=0; // a safety bent to avoid taking too much time
         List<FutureLoad> r = new ArrayList<FutureLoad>();
         for (long t=start; t<end && cnt<256; cnt++) {
-            int sz = p.sizeOfReservation(t);
-            long t2 = p.timeOfNextChange(t+1);
+            int sz = p.sizeOfReservation(computer,t);
+            long t2 = p.timeOfNextChange(computer,t+1);
             if (sz>0)
                 r.add(new FutureLoad(t,t2-t,sz));
             t = t2;

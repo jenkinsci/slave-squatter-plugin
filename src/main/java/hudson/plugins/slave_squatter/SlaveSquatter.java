@@ -24,6 +24,7 @@
 package hudson.plugins.slave_squatter;
 
 import hudson.model.AbstractDescribableImpl;
+import hudson.model.Computer;
 
 import java.util.Date;
 
@@ -36,8 +37,11 @@ public abstract class SlaveSquatter extends AbstractDescribableImpl<SlaveSquatte
      * <p>
      * The timestamp is the same format as {@link Date#getTime()}. The precision is 1 minute,
      * and thus the caller should set the second and millisecond portion to 00.000.
+     *
+     * @param computer
+     *      Computer for which the reservation is computed.
      */
-    public abstract int sizeOfReservation(long timestamp);
+    public abstract int sizeOfReservation(Computer computer, long timestamp);
 
     /**
      * Given the timestamp, return the nearest future timestamp (including itself --- the ceil semantics)
@@ -47,7 +51,7 @@ public abstract class SlaveSquatter extends AbstractDescribableImpl<SlaveSquatte
      * Hudson uses this information to figure out the scheduling that takes the future capacity change
      * into account.
      */
-    public abstract long timeOfNextChange(long timestamp);
+    public abstract long timeOfNextChange(Computer computer, long timestamp);
 
     
 }

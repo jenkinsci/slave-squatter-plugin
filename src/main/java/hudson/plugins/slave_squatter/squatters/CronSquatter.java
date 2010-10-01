@@ -25,6 +25,7 @@ package hudson.plugins.slave_squatter.squatters;
 
 import antlr.ANTLRException;
 import hudson.Extension;
+import hudson.model.Computer;
 import hudson.plugins.slave_squatter.SlaveSquatter;
 import hudson.plugins.slave_squatter.SlaveSquatterDescriptor;
 import hudson.scheduler.CronTab;
@@ -51,9 +52,9 @@ public class CronSquatter extends SlaveSquatter {
          */
         public final long duration;
         /**
-         * How many executors do we reserve?
+         * How many executors do we reserve? -1 to indicate all executors.
          */
-        public final int size;
+        private final int size;
 
         public Entry(int size, CronTab cron, long duration) {
             this.cron = cron;
@@ -61,10 +62,15 @@ public class CronSquatter extends SlaveSquatter {
             this.size = size;
         }
 
-        public int sizeOfReservation(long timestamp) {
+        public int getReservationSize(Computer c) {
+            if (size<0) return c.countExecutors();
+            return size;
+        }
+
+        public int sizeOfReservation(Computer c, long timestamp) {
             long start = cron.floor(timestamp).getTimeInMillis();
             if (start<=timestamp && timestamp<start+duration)
-                return size;
+                return getReservationSize(c);
             return 0;
         }
 
@@ -95,12 +101,14 @@ public class CronSquatter extends SlaveSquatter {
             String[] tokens = line.split(":");
             if (tokens.length!=3)
                 throw new IllegalArgumentException("3 tokens separated by ':' are expected, but found "+tokens.length+" in "+line);
+            for (int i=0; i<tokens.length; i++)
+                tokens[i] = tokens[i].trim();
 
             try {
                 entries.add(new Entry(
-                        Integer.parseInt(tokens[0].trim()),
-                        new CronTab(tokens[1].trim(),lineNumber),
-                        Long.parseLong(tokens[2].trim())*60*1000));
+                        tokens[0].equals("*") ? -1 : Integer.parseInt(tokens[0]),
+                        new CronTab(tokens[1],lineNumber),
+                        Long.parseLong(tokens[2])*60*1000));
             } catch (ANTLRException e) {
                 throw new IllegalArgumentException(hudson.scheduler.Messages.CronTabList_InvalidInput(line,e.toString()),e);
             }
@@ -109,15 +117,15 @@ public class CronSquatter extends SlaveSquatter {
     }
 
     @Override
-    public int sizeOfReservation(long timestamp) {
+    public int sizeOfReservation(Computer computer, long timestamp) {
         int r=0;
         for (Entry e : entries)
-            r += e.sizeOfReservation(timestamp);
+            r += e.sizeOfReservation(computer,timestamp);
         return r;
     }
 
     @Override
-    public long timeOfNextChange(long timestamp) {
+    public long timeOfNextChange(Computer computer, long timestamp) {
         long l = Long.MAX_VALUE;
         for (Entry e : entries)
             l = Math.min(l,e.timeOfNextChange(timestamp));
@@ -126,9 +134,6 @@ public class CronSquatter extends SlaveSquatter {
 
     @Extension
     public static class DescriptorImpl extends SlaveSquatterDescriptor {
-        public DescriptorImpl() {
-        }
-
         @Override
         public String getDisplayName() {
             return Messages.CronSquatter_DisplayName();

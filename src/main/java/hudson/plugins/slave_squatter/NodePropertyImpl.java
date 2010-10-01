@@ -24,7 +24,7 @@
 package hudson.plugins.slave_squatter;
 
 import hudson.Extension;
-import hudson.Util;
+import hudson.model.Computer;
 import hudson.model.Node;
 import hudson.model.Saveable;
 import hudson.slaves.NodeProperty;
@@ -55,17 +55,17 @@ public class NodePropertyImpl extends NodeProperty<Node> {
         return squatters;
     }
 
-    public int sizeOfReservation(long timestamp) {
+    public int sizeOfReservation(Computer c, long timestamp) {
         int r=0;
         for (SlaveSquatter s : squatters)
-            r += s.sizeOfReservation(timestamp);
+            r += s.sizeOfReservation(c, timestamp);
         return r;
     }
 
-    public long timeOfNextChange(long timestamp) {
+    public long timeOfNextChange(Computer c, long timestamp) {
         long t = Long.MAX_VALUE;
         for (SlaveSquatter s : squatters)
-            t = Math.min(t,s.timeOfNextChange(timestamp));
+            t = Math.min(t,s.timeOfNextChange(c, timestamp));
         return t;
     }
 
