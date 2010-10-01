@@ -29,7 +29,9 @@ import hudson.model.Computer;
 import hudson.plugins.slave_squatter.SlaveSquatter;
 import hudson.plugins.slave_squatter.SlaveSquatterDescriptor;
 import hudson.scheduler.CronTab;
+import hudson.util.FormValidation;
 import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.QueryParameter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -90,7 +92,12 @@ public class CronSquatter extends SlaveSquatter {
     }
 
     private Object readResolve() {
-        entries = new ArrayList<Entry>();
+        entries = parseFormat(format);
+        return this;
+    }
+
+    private static List<Entry> parseFormat(String format) {
+        List<Entry> entries = new ArrayList<Entry>();
         int lineNumber = 0;
         for (String line : format.split("\\r?\\n")) {
             lineNumber++;
@@ -113,7 +120,7 @@ public class CronSquatter extends SlaveSquatter {
                 throw new IllegalArgumentException(hudson.scheduler.Messages.CronTabList_InvalidInput(line,e.toString()),e);
             }
         }
-        return this;
+        return entries;
     }
 
     @Override
@@ -138,5 +145,15 @@ public class CronSquatter extends SlaveSquatter {
         public String getDisplayName() {
             return Messages.CronSquatter_DisplayName();
         }
+
+        public FormValidation doCheckFormat(@QueryParameter String value) {
+            try {
+                parseFormat(value);
+                return FormValidation.ok();
+            } catch (Exception e) {
+                return FormValidation.error(e,"Invalid format");
+            }
+        }
+
     }
 }
