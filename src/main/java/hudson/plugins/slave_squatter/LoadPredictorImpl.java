@@ -28,6 +28,7 @@ import hudson.model.Computer;
 import hudson.model.Node;
 import hudson.model.queue.FutureLoad;
 import hudson.model.queue.LoadPredictor;
+import hudson.model.queue.MappingWorksheet;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -41,7 +42,8 @@ import java.util.List;
 @Extension
 public class LoadPredictorImpl extends LoadPredictor {
     @Override
-    public Iterable<FutureLoad> predict(Computer computer, long start, long end) {
+    public Iterable<FutureLoad> predict(MappingWorksheet plan, Computer computer,
+                                        long start, long end) {
         Node n = computer.getNode();
         if (n==null)    return Collections.emptyList();
 

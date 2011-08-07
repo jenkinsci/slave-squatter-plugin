@@ -48,4 +48,8 @@ public class ReservationExecutable implements Executable {
             // block forever until interrupted
         }
     }
+
+    public long getEstimatedDuration() {
+        return -1;
+    }
 }
