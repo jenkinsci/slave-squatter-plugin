@@ -48,8 +48,8 @@ public abstract class SlaveSquatter extends AbstractDescribableImpl<SlaveSquatte
      * when the size of the reservation changes.
      *
      * <p>
-     * Hudson uses this information to figure out the scheduling that takes the future capacity change
-     * into account.
+     * Jenkins uses this information to figure out the scheduling that takes the future capacity
+     * change into account.
      */
     public abstract long timeOfNextChange(Computer computer, long timestamp);
 
