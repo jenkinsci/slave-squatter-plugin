@@ -8,7 +8,7 @@
   </parent>
   
   <artifactId>slave-squatter</artifactId>
-  <version>1.2-SNAPSHOT</version>
+  <version>1.2</version>
   <packaging>hpi</packaging>
   <name>Slave squatter plugin</name>
   <url>http://wiki.jenkins-ci.org/display/JENKINS/Slave+Squatter+Plugin</url>
